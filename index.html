@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Hephos AI Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{--bg:#0b1420;--bg2:#18253a;--panel:#121b2a;--text:#e9eef6;--muted:#9fb0c8;--accent:#e6c249}
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(var(--bg),var(--bg2));color:var(--text);font:16px/1.5 system-ui,Segoe UI,Roboto}
+    header{padding:18px 20px;border-bottom:1px solid #22324d;background:#0f1a2a;position:sticky;top:0}
+    header h1{margin:0;font-size:18px;letter-spacing:.3px}
+    .wrap{max-width:960px;margin:0 auto;padding:18px}
+    .chat{background:var(--panel);border:1px solid #22324d;border-radius:16px;height:70vh;display:flex;flex-direction:column;overflow:hidden}
+    .msgs{padding:16px;overflow:auto;gap:10px;display:flex;flex-direction:column}
+    .msg{max-width:72%;padding:12px 14px;border-radius:14px;white-space:pre-wrap}
+    .me{align-self:flex-end;background:#1f6add;color:#fff}
+    .ai{align-self:flex-start;background:#1b2435;border:1px solid #2b3c5c}
+    .muted{color:var(--muted);font-size:13px}
+    form{display:flex;gap:10px;padding:12px;border-top:1px solid #22324d;background:#0f1a2a}
+    input,button{font:16px/1.2 system-ui,Segoe UI,Roboto}
+    input{flex:1;padding:12px 14px;border-radius:10px;border:1px solid #2b3c5c;background:#0f1726;color:var(--text)}
+    button{padding:12px 16px;border-radius:10px;border:1px solid #705f1e;background:var(--accent);color:#0b0b0b;font-weight:600;cursor:pointer}
+    .brand{margin:10px auto 30px;color:var(--muted);font-size:13px;max-width:960px}
+  </style>
+</head>
+<body>
+  <header><h1>Hephos AI Assistant</h1></header>
+  <div class="wrap">
+    <div class="chat">
+      <div class="msgs" id="msgs">
+        <div class="msg ai">Hello! I’m the Hephos AI Assistant. How can I help you today?</div>
+      </div>
+      <form id="form">
+        <input id="input" placeholder="Type your message..." autocomplete="off" />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+    <p class="brand">Powered by Hephos AI Solutions</p>
+  </div>
+
+  <script>
+    const API_URL = 'http://127.0.0.1:8000/chat'; // ako promijeniš port/host, promijeni ovdje
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+    const msgs = document.getElementById('msgs');
+
+    function addMsg(text, who){
+      const div = document.createElement('div');
+      div.className = 'msg ' + (who === 'me' ? 'me' : 'ai');
+      div.textContent = text;
+      msgs.appendChild(div);
+      msgs.scrollTop = msgs.scrollHeight;
+      return div;
+    }
+
+    async function sendMessage(text){
+      addMsg(text,'me');
+      const pending = addMsg('…','ai');
+      try{
+        const r = await fetch(API_URL, {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ message: text })
+        });
+        const data = await r.json();
+        pending.textContent = data.response || data.error || 'No response';
+      }catch(e){
+        pending.textContent = 'Error contacting server.';
+      }
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const text = input.value.trim();
+      if(!text) return;
+      input.value='';
+      sendMessage(text);
+    });
+  </script>
+</body>
+</html>
