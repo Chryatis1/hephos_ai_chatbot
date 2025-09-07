@@ -7,20 +7,16 @@
   <link rel="icon" type="image/png" href="logo.png"/>
   <style>
     :root{
-      --light-gray:#f2f3f5;    /* svijetlija siva */
-      --light-gray-2:#e6e7ea;
-      --emerald:#023020;       /* zelena za me poruke */
-      --emerald-2:#024e37;
-      --lgold:#EADFB7;         /* svijetlo zlato (naglasci) */
-      --lgold-2:#D9C68C;
+      --light-gray:#f2f3f5; --light-gray-2:#e6e7ea;
+      --emerald:#023020; --emerald-2:#024e37;
+      --lgold:#EADFB7; --lgold-2:#D9C68C;
       --stroke:rgba(233,220,183,.30);
-      --text-dark:#222;
-      --text-muted:#666;
+      --text-dark:#222; --text-muted:#666;
+      --ai-bg:#26282d; /* svjetlije ~5% od #1f1f23 */
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%}
 
-    /* VANJSKA POZADINA – SVIJETLO SIVA */
     body{
       font:16px/1.6 Inter,system-ui,"Segoe UI",Roboto,sans-serif;
       background: radial-gradient(900px 600px at -20% -10%, rgba(234,223,183,.12), transparent 60%),
@@ -29,7 +25,6 @@
       display:flex; flex-direction:column; align-items:center; min-height:100vh;
     }
 
-    /* HEADER s logom i natpisom u zlatnoj */
     .nav{
       position:sticky; top:0; width:100%; z-index:10;
       display:flex; align-items:center; justify-content:center; gap:12px;
@@ -38,136 +33,65 @@
       border-bottom:1px solid rgba(234,223,183,.35);
       box-shadow:0 4px 20px rgba(0,0,0,.08);
     }
-    .nav-left{
-      position:absolute; left:18px; display:flex; align-items:center; gap:10px;
-      color:var(--lgold);
-      font-weight:800; letter-spacing:.3px;
-    }
+    .nav-left{position:absolute; left:18px; display:flex; align-items:center; gap:10px; color:var(--lgold); font-weight:800; letter-spacing:.3px}
     .logo{height:30px; filter: sepia(1) saturate(2.2) hue-rotate(5deg) brightness(1.05) drop-shadow(0 0 10px rgba(234,223,183,.45));}
-    .tag{
-      padding:4px 10px; border-radius:999px; font-size:12px; color:#111;
-      background:linear-gradient(135deg,var(--lgold),#f5edd0);
-      border:1px solid rgba(255,255,255,.15);
-      box-shadow:0 6px 18px rgba(234,223,183,.25);
-    }
+    .tag{padding:4px 10px; border-radius:999px; font-size:12px; color:#111; background:linear-gradient(135deg,var(--lgold),#f5edd0); border:1px solid rgba(255,255,255,.15); box-shadow:0 6px 18px rgba(234,223,183,.25)}
 
-    /* LAYOUT */
     .container{max-width:950px; width:100%; margin:26px auto; padding:0 16px; display:flex; flex-direction:column; gap:18px}
-
-    .hero{
-      padding:18px 20px; border-radius:16px;
-      background:linear-gradient(135deg,rgba(255,255,255,.7),rgba(234,223,183,.25));
-      border:1px solid rgba(234,223,183,.4);
-      box-shadow:0 10px 22px rgba(0,0,0,.08);
-      display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
-    }
+    .hero{padding:18px 20px; border-radius:16px; background:linear-gradient(135deg,rgba(255,255,255,.7),rgba(234,223,183,.25)); border:1px solid rgba(234,223,183,.4); box-shadow:0 10px 22px rgba(0,0,0,.08); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px}
     .hero h1{margin:0; font-weight:900; color:#0e0e0f}
     .hero p{margin:4px 0 0; color:var(--text-muted); font-size:14px}
-    .chip{
-      padding:8px 12px; border-radius:999px; font-size:13px;
-      border:1px solid rgba(234,223,183,.35); background:rgba(255,255,255,.7); color:#333; margin-left:8px
-    }
+    .chip{padding:8px 12px; border-radius:999px; font-size:13px; border:1px solid rgba(234,223,183,.35); background:rgba(255,255,255,.7); color:#333; margin-left:8px}
 
-    /* CHATBOX – bijelo-zlatni gradient */
     .card{
       height:72vh; border-radius:22px; overflow:hidden; position:relative;
       background: linear-gradient(180deg,#ffffff 0%, #fff8e7 45%, #f3e7c1 100%);
-      border:2px solid var(--stroke);
-      box-shadow:0 28px 60px rgba(0,0,0,.15);
+      border:2px solid var(--stroke); box-shadow:0 28px 60px rgba(0,0,0,.15);
       display:flex; flex-direction:column; color:#111;
     }
-    .card::before{
-      content:""; position:absolute; inset:0; pointer-events:none;
-      background:url('logo.png') center/240px no-repeat;
-      opacity:.05; filter:grayscale(100%) brightness(240%);
-    }
+    .card::before{content:""; position:absolute; inset:0; pointer-events:none; background:url('logo.png') center/240px no-repeat; opacity:.05; filter:grayscale(100%) brightness(240%)}
 
-    .card-head{
-      padding:12px 16px; display:flex; justify-content:space-between; align-items:center;
-      background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.7));
-      border-bottom:1px solid rgba(0,0,0,.06);
-    }
+    .card-head{padding:12px 16px; display:flex; justify-content:space-between; align-items:center; background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.7)); border-bottom:1px solid rgba(0,0,0,.06)}
     .status{display:flex; align-items:center; gap:8px; color:#333; font-size:13px}
     .dot{width:8px; height:8px; border-radius:50%; background:#43d38d; box-shadow:0 0 10px #43d38d}
 
     .msgs{flex:1; padding:18px; display:flex; flex-direction:column; gap:12px; overflow:auto}
 
-    /* poruke */
-    .msg{
-      position:relative;
-      padding:12px 16px; max-width:78%; border-radius:14px; font-size:15px; line-height:1.5;
-      word-wrap:break-word; box-shadow:0 2px 8px rgba(0,0,0,.08); animation:fade .2s ease
-    }
-    .ai{align-self:flex-start; background:#1f1f23; color:#f2f2f2; border:1px solid rgba(234,223,183,.25)}
+    .msg{position:relative; padding:12px 16px; max-width:78%; border-radius:14px; font-size:15px; line-height:1.5; word-wrap:break-word; box-shadow:0 2px 8px rgba(0,0,0,.08); animation:fade .2s ease}
+    .ai{align-self:flex-start; background:var(--ai-bg); color:#f2f2f2; border:1px solid rgba(234,223,183,.22)}
     .me{align-self:flex-end; background:var(--emerald-2); color:#fff; border:1px solid rgba(234,223,183,.32)}
 
-    /* copy ikonica na AI porukama */
+    /* MINIMAL copy ikona (20x20), bez okvira; postaje kvačica na copy */
     .copy-btn{
-      position:absolute; top:6px; right:6px; width:26px; height:26px; border-radius:8px;
-      border:1px solid rgba(234,223,183,.35); background:rgba(255,255,255,.08);
-      display:flex; align-items:center; justify-content:center; cursor:pointer;
-      transition:.15s; opacity:.85;
+      position:absolute; top:6px; right:6px; width:22px; height:22px; border:0; background:transparent;
+      display:flex; align-items:center; justify-content:center; cursor:pointer; opacity:.85; transition:.15s;
     }
-    .copy-btn:hover{ background:rgba(255,255,255,.18) }
-    .copy-btn svg{width:14px; height:14px; fill:var(--lgold-2)}
+    .copy-btn:hover{opacity:1}
+    .copy-btn svg{width:18px; height:18px; fill:var(--lgold-2)}
+    .copy-btn.check svg{fill:#7bd389} /* boja kvačice */
 
-    /* indikator tipkanja – rotirajući logo */
-    .typing-logo{
-      align-self:flex-start; padding:6px 10px; border-radius:12px;
-      background:#1f1f23; border:1px dashed rgba(234,223,183,.35);
-      display:flex; align-items:center; gap:10px; color:#ddd;
-    }
-    .typing-logo img{height:18px; width:auto; animation:spin 1.2s linear infinite; filter:drop-shadow(0 0 8px rgba(234,223,183,.4))}
+    /* tipkanje – SAMO rotirajući logo (bez boxa i teksta) */
+    .typing-spin{height:18px; width:auto; animation:spin 1.2s linear infinite; filter:drop-shadow(0 0 6px rgba(234,223,183,.45))}
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    .card-foot{
-      padding:12px; display:flex; gap:10px;
-      background:linear-gradient(0deg, rgba(255,255,255,.9), rgba(255,255,255,.7));
-      border-top:1px solid rgba(0,0,0,.06);
-    }
-    input{
-      flex:1; padding:14px; border-radius:12px; border:1px solid rgba(0,0,0,.12);
-      background:rgba(255,255,255,.9); color:#111; outline:none;
-    }
+    .card-foot{padding:12px; display:flex; gap:10px; background:linear-gradient(0deg, rgba(255,255,255,.9), rgba(255,255,255,.7)); border-top:1px solid rgba(0,0,0,.06)}
+    input{flex:1; padding:14px; border-radius:12px; border:1px solid rgba(0,0,0,.12); background:rgba(255,255,255,.9); color:#111; outline:none}
     input:focus{border-color:var(--lgold-2); box-shadow:0 0 8px rgba(233,220,183,.6)}
-    button{
-      position:relative; padding:14px 20px; border-radius:12px; border:0; cursor:pointer;
-      color:#111; font-weight:800; letter-spacing:.2px;
-      background:linear-gradient(135deg,var(--lgold),var(--lgold-2));
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.65), inset 0 -2px 0 rgba(160,140,80,.55), 0 10px 22px rgba(233,220,183,.35);
-      transition:transform .18s ease, box-shadow .18s ease;
-    }
+    button{position:relative; padding:14px 20px; border-radius:12px; border:0; cursor:pointer; color:#111; font-weight:800; letter-spacing:.2px; background:linear-gradient(135deg,var(--lgold),var(--lgold-2)); box-shadow: inset 0 1px 0 rgba(255,255,255,.65), inset 0 -2px 0 rgba(160,140,80,.55), 0 10px 22px rgba(233,220,183,.35); transition:transform .18s ease, box-shadow .18s ease}
     button:hover{ transform:translateY(-1px); box-shadow: inset 0 1px 0 rgba(255,255,255,.7), inset 0 -2px 0 rgba(160,140,80,.65), 0 14px 28px rgba(233,220,183,.45) }
     button:active{ transform:translateY(0) }
 
     .footnote{margin:14px auto 28px; text-align:center; color:#8a8a90; font-size:12px}
 
-    /* FLOATING "ORDER ON FIVERR" */
-    .fiverr{
-      position:fixed; right:16px; bottom:18px; z-index:30;
-      display:flex; align-items:center; gap:10px;
-      padding:12px 16px; border-radius:16px; text-decoration:none;
-      color:#111; font-weight:900; letter-spacing:.2px;
-      background:linear-gradient(135deg,var(--lgold),var(--lgold-2));
-      border:1px solid rgba(0,0,0,.08);
-      box-shadow:0 12px 28px rgba(233,220,183,.35);
-      transition:.18s ease;
-    }
+    .fiverr{position:fixed; right:16px; bottom:18px; z-index:30; display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:16px; text-decoration:none; color:#111; font-weight:900; letter-spacing:.2px; background:linear-gradient(135deg,var(--lgold),var(--lgold-2)); border:1px solid rgba(0,0,0,.08); box-shadow:0 12px 28px rgba(233,220,183,.35); transition:.18s ease}
     .fiverr:hover{ transform:translateY(-1px); box-shadow:0 16px 36px rgba(233,220,183,.45) }
     .fiverr svg{width:18px; height:18px; fill:#111}
 
     @keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
-
-    @media(max-width:720px){
-      .container{margin:18px auto}
-      .card{height:70vh; min-height:500px}
-      .msg{max-width:88%}
-      .fiverr{right:12px; bottom:12px; padding:10px 14px}
-    }
+    @media(max-width:720px){ .container{margin:18px auto} .card{height:70vh; min-height:500px} .msg{max-width:88%} .fiverr{right:12px; bottom:12px; padding:10px 14px} }
   </style>
 </head>
 <body>
-  <!-- HEADER -->
   <div class="nav">
     <div class="nav-left">
       <img src="logo.png" alt="Hephos AI logo" class="logo"/>
@@ -180,7 +104,7 @@
     <section class="hero">
       <div>
         <h1>Hephos AI Assistant</h1>
-        <p>Light-gray outer • Gold accents • Emerald chat bubbles.</p>
+        <p>Light-gray outer • Light-gold accents • Emerald chat bubbles.</p>
       </div>
       <div>
         <span class="chip">GPT-4o-mini</span>
@@ -189,7 +113,6 @@
       </div>
     </section>
 
-    <!-- CHATBOX -->
     <section class="card" role="region" aria-label="Chat window">
       <div class="card-head">
         <div class="status"><span class="dot"></span> Online • replies in seconds</div>
@@ -208,9 +131,7 @@
     <div class="footnote">© Hephos AI — Light-Gold accents #EADFB7 / #D9C68C</div>
   </main>
 
-  <!-- FLOATING ORDER BUTTON — promijeni URL na svoj Fiverr gig -->
   <a class="fiverr" href="https://www.fiverr.com/" target="_blank" rel="noopener">
-    <!-- mali “bag” ikon -->
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7V6a4 4 0 1 1 8 0v1h3a1 1 0 0 1 .99 1.141l-1.6 11.2A3 3 0 0 1 15.42 22H8.58a3 3 0 0 1-2.97-2.659L4.01 8.141A1 1 0 0 1 5 7h3Zm2 0h4V6a2 2 0 1 0-4 0v1Z"/></svg>
     Order on Fiverr
   </a>
@@ -224,41 +145,50 @@
 
     function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
 
-    /* dodaj poruku + copy gumb za AI */
+    function addCopyButton(div){
+      const btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      // ikona clipboard
+      btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 16H8V7h11v14Z"/></svg>';
+      btn.title = "Copy";
+      btn.addEventListener('click',()=>{
+        const txt = div.textContent;
+        navigator.clipboard.writeText(txt).then(()=>{
+          // promijeni u kvačicu
+          btn.classList.add('check');
+          btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M20.285 6.708a1 1 0 0 1 0 1.414l-9.19 9.19a1 1 0 0 1-1.414 0l-5-5a1 1 0 1 1 1.414-1.414l4.293 4.293 8.483-8.483a1 1 0 0 1 1.414 0Z"/></svg>';
+          setTimeout(()=>{
+            btn.classList.remove('check');
+            btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 16H8V7h11v14Z"/></svg>';
+          }, 1200);
+        });
+      });
+      div.appendChild(btn);
+    }
+
     function addMsg(text, who='ai'){
       const div = document.createElement('div');
       div.className = `msg ${who}`;
       div.innerHTML = escapeHtml(text);
       msgs.appendChild(div);
-
-      if(who === 'ai'){
-        const copy = document.createElement('button');
-        copy.className = 'copy-btn';
-        copy.innerHTML = `<svg viewBox="0 0 24 24"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 16H8V7h11v14Z"/></svg>`;
-        copy.title = "Copy to clipboard";
-        copy.addEventListener('click', () => {
-          const txt = div.textContent;
-          navigator.clipboard.writeText(txt).then(()=>{
-            copy.style.opacity = '1';
-            copy.style.background = 'rgba(255,255,255,.25)';
-            setTimeout(()=>{ copy.style.background='rgba(255,255,255,.08)'; }, 500);
-          });
-        });
-        div.appendChild(copy);
-      }
-
+      if(who === 'ai') addCopyButton(div);
       msgs.scrollTop = msgs.scrollHeight;
       return div;
     }
 
-    /* indikator tipkanja – rotirajući logo */
-    function addTypingLogo(){
-      const wrap = document.createElement('div');
-      wrap.className = 'typing-logo';
-      wrap.innerHTML = '<img src="logo.png" alt="typing"/><span>Assistant is thinking…</span>';
-      msgs.appendChild(wrap);
+    // tipkanje: SAMO rotirajući logo
+    function addTypingSpin(){
+      const img = document.createElement('img');
+      img.src = 'logo.png';
+      img.alt = 'typing';
+      img.className = 'typing-spin';
+      msgWrap = document.createElement('div');
+      msgWrap.style.display = 'flex';
+      msgWrap.style.alignItems = 'center';
+      msgWrap.appendChild(img);
+      msgs.appendChild(msgWrap);
       msgs.scrollTop = msgs.scrollHeight;
-      return wrap;
+      return msgWrap;
     }
 
     async function sendMessage(){
@@ -266,8 +196,8 @@
       if(!text) return;
       addMsg(text,'me');
       inp.value = '';
-      const typing = addTypingLogo();
 
+      const typing = addTypingSpin(); // samo logo
       try{
         const r = await fetch(API_URL, {
           method:'POST',
