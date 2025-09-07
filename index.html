@@ -1,208 +1,241 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hephos AI Assistant</title>
+  <meta charset="utf-8" />
+  <title>Hephos AI Assistant — Premium</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
   <style>
-    /* Paleta boja */
-    :root {
-      --dark-green: #023020; /* Glavna premium zelena */
-      --gold: #D4AF37;       /* Zlatna */
-      --white: #FFFFFF;
-      --gray: #BFC9C2;
-      --bg: #0B1512;         /* Tamna podloga */
-      --panel: #11211B;      /* Chat panel */
-      --accent-hover: #035c39; /* Hover zelena */
+    :root{
+      --emerald:#023020;         /* glavna zelena */
+      --emerald-2:#0e2e25;
+      --emerald-3:#10231d;
+      --gold:#D4AF37;            /* zlatna */
+      --gold-2:#e8c95c;
+      --text:#F5F7F6;            /* bijela */
+      --muted:#c7d3cd;           /* sivo-zelena */
+      --panel:rgba(10,26,21,.55);/* glass */
+      --stroke:rgba(212,175,55,.25);
+      --ai:#0f1f18;              /* AI bubble */
+      --me:#133b2f;              /* User bubble */
+      --shadow:0 30px 80px rgba(0,0,0,.45);
+      --ring:0 0 0 1px rgba(212,175,55,.25), 0 0 30px rgba(212,175,55,.12);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text);
+      font:16px/1.6 Inter, ui-sans-serif, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 700px at 85% -10%, rgba(212,175,55,.15), transparent 60%),
+        radial-gradient(900px 600px at -10% 110%, rgba(2,48,32,.5), transparent 60%),
+        linear-gradient(180deg, #08120f, #0b1713 40%, var(--emerald-3) 100%);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    /* Top bar */
+    .nav{
+      position:sticky; top:0; z-index:20;
+      display:flex; align-items:center; justify-content:center;
+      gap:12px; padding:14px 16px;
+      background:linear-gradient(180deg, rgba(2,48,32,.9), rgba(2,48,32,.6));
+      border-bottom:1px solid rgba(212,175,55,.15);
+      box-shadow:0 8px 30px rgba(0,0,0,.35);
+      backdrop-filter:saturate(130%) blur(10px);
+    }
+    .logo-dot{
+      width:12px; height:12px; border-radius:999px; background:var(--gold);
+      box-shadow:0 0 18px rgba(212,175,55,.75);
+    }
+    .brand{font-weight:700; letter-spacing:.6px}
+    .tag{padding:4px 8px; border-radius:999px; font-size:12px; color:#111;
+      background:linear-gradient(135deg,var(--gold),var(--gold-2));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 6px 20px rgba(212,175,55,.35);
     }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: radial-gradient(800px circle at top right, rgba(212,175,55,0.1), transparent 60%),
-                  linear-gradient(180deg, var(--bg), var(--dark-green));
-      color: var(--white);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      height: 100vh;
-      padding: 0;
-      margin: 0;
+    /* Shell */
+    .container{
+      max-width:1000px; margin:28px auto; padding:0 16px;
+      display:grid; grid-template-columns:1fr; gap:18px;
+    }
+    .hero{
+      display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+      padding:18px 20px; border:1px solid var(--stroke); border-radius:16px;
+      background:linear-gradient(180deg, rgba(15,33,26,.65), rgba(10,26,21,.45));
+      box-shadow:var(--shadow); backdrop-filter:blur(10px);
+    }
+    .hero h1{margin:0; font-weight:800; letter-spacing:.4px}
+    .hero p{margin:4px 0 0; color:var(--muted); font-size:14px}
+    .hero .cta{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    }
+    .chip{border:1px solid var(--stroke); color:var(--muted);
+      padding:8px 10px; border-radius:999px; font-size:12px; background:rgba(16,35,29,.35)
     }
 
-    /* Header */
-    header {
-      width: 100%;
-      padding: 15px 20px;
-      background-color: var(--dark-green);
-      color: var(--white);
-      font-size: 22px;
-      font-weight: 600;
-      text-align: center;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
-      letter-spacing: 1px;
+    /* Chat card */
+    .card{
+      height:72vh; min-height:520px;
+      border:1px solid var(--stroke); border-radius:18px; overflow:hidden;
+      background:linear-gradient(180deg, rgba(16,35,29,.55), rgba(10,26,21,.45));
+      backdrop-filter:blur(10px); box-shadow:var(--shadow);
+      display:flex; flex-direction:column;
+    }
+    .card-head{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:14px 16px; border-bottom:1px solid var(--stroke);
+      background:linear-gradient(180deg, rgba(16,35,29,.65), rgba(16,35,29,.35));
+    }
+    .status{display:flex; align-items:center; gap:8px; color:var(--muted); font-size:13px}
+    .dot{width:8px; height:8px; border-radius:50%; background:#43d38d; box-shadow:0 0 12px #43d38d}
+
+    .msgs{flex:1; overflow:auto; padding:18px; display:flex; flex-direction:column; gap:12px}
+    .msg{
+      max-width:78%; padding:12px 14px; border-radius:14px; position:relative;
+      animation:fadeIn .2s ease; word-wrap:break-word; white-space:pre-wrap;
+    }
+    .ai{ align-self:flex-start; background:var(--ai); border:1px solid var(--stroke) }
+    .me{ align-self:flex-end; background:var(--me); border:1px solid rgba(212,175,55,.18) }
+    .msg small{ display:block; opacity:.65; font-size:11px; margin-top:6px }
+
+    .typing{ display:flex; gap:6px; align-items:center; align-self:flex-start; padding:10px 12px;
+      background:var(--ai); border:1px dashed var(--stroke); border-radius:12px }
+    .typing i{ width:6px; height:6px; border-radius:999px; background:var(--gold); opacity:.8; animation:bounce 1.2s infinite }
+    .typing i:nth-child(2){ animation-delay:.15s } .typing i:nth-child(3){ animation-delay:.3s }
+
+    .card-foot{
+      border-top:1px solid var(--stroke); padding:12px; display:flex; gap:10px;
+      background:linear-gradient(0deg, rgba(16,35,29,.6), rgba(16,35,29,.35));
+    }
+    input{
+      flex:1; padding:14px; border-radius:12px; border:1px solid var(--stroke);
+      background:rgba(12,24,20,.7); color:var(--text); outline:none; transition:.2s;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
+    }
+    input:focus{ box-shadow:var(--ring) }
+    button{
+      padding:14px 18px; border-radius:12px; border:1px solid rgba(255,255,255,.06);
+      background:linear-gradient(135deg, var(--gold), var(--gold-2));
+      color:#111; font-weight:700; letter-spacing:.3px; cursor:pointer; transition:.22s;
+      box-shadow:0 12px 30px rgba(212,175,55,.28);
+    }
+    button:hover{ transform:translateY(-1px) }
+    button:active{ transform:translateY(0) }
+
+    .footnote{margin:14px auto 28px; text-align:center; color:var(--muted); font-size:12px}
+
+    @keyframes fadeIn{ from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+    @keyframes bounce{
+      0%,60%,100%{ transform:translateY(0); opacity:.7 }
+      30%{ transform:translateY(-4px); opacity:1 }
     }
 
-    /* Chat container */
-    .chat-container {
-      width: 100%;
-      max-width: 650px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      background-color: var(--panel);
-      border-radius: 12px;
-      box-shadow: 0 4px 30px rgba(0,0,0,0.45);
-      margin-top: 20px;
-      overflow: hidden;
-    }
-
-    /* Chat messages */
-    .messages {
-      flex: 1;
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      overflow-y: auto;
-      scroll-behavior: smooth;
-    }
-
-    .msg {
-      padding: 12px 16px;
-      border-radius: 10px;
-      max-width: 75%;
-      font-size: 15px;
-      line-height: 1.5;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-      animation: fadeIn 0.2s ease-in-out;
-      word-wrap: break-word;
-    }
-
-    .msg.ai {
-      background-color: #0f1e19;
-      border: 1px solid rgba(212,175,55,0.2);
-      align-self: flex-start;
-    }
-
-    .msg.me {
-      background-color: var(--dark-green);
-      border: 1px solid rgba(212,175,55,0.3);
-      color: var(--white);
-      align-self: flex-end;
-    }
-
-    /* Input box */
-    .input-box {
-      display: flex;
-      padding: 12px;
-      background-color: var(--panel);
-      border-top: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .input-box input {
-      flex: 1;
-      padding: 12px 14px;
-      background-color: #0e1e19;
-      color: var(--white);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 8px;
-      font-size: 15px;
-      outline: none;
-      transition: 0.2s;
-    }
-
-    .input-box input:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 6px rgba(212,175,55,0.3);
-    }
-
-    .input-box button {
-      margin-left: 10px;
-      padding: 12px 22px;
-      background-color: var(--gold);
-      color: #111;
-      font-weight: 600;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease-in-out;
-    }
-
-    .input-box button:hover {
-      background-color: #e8c95c;
-    }
-
-    /* Fade in animation */
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(5px);}
-      to {opacity: 1; transform: translateY(0);}
+    @media (max-width:720px){
+      .container{ margin:18px auto }
+      .card{ height:70vh; min-height:500px }
+      .msg{ max-width:88% }
+      .hero{ padding:14px 16px }
     }
   </style>
 </head>
 <body>
-  <header>Hephos AI Solutions</header>
-
-  <div class="chat-container">
-    <div class="messages" id="messages">
-      <div class="msg ai">👋 Hi! I'm your Hephos AI Assistant. How can I help you today?</div>
-    </div>
-
-    <div class="input-box">
-      <input id="userInput" placeholder="Type your message..." />
-      <button id="sendBtn">Send</button>
-    </div>
+  <div class="nav">
+    <span class="logo-dot"></span>
+    <span class="brand">Hephos AI Solutions</span>
+    <span class="tag">Premium AI Chatbot</span>
   </div>
 
+  <main class="container">
+    <section class="hero">
+      <div>
+        <h1>Hephos AI Assistant</h1>
+        <p>Smart. Fast. Automated. — Elegant emerald × gold interface.</p>
+      </div>
+      <div class="cta">
+        <span class="chip">GPT-4o-mini</span>
+        <span class="chip">Multi-language</span>
+        <span class="chip">API Integrations</span>
+      </div>
+    </section>
+
+    <section class="card" role="region" aria-label="Chat window">
+      <div class="card-head">
+        <div class="status"><span class="dot"></span> Online • replies in seconds</div>
+      </div>
+
+      <div id="msgs" class="msgs">
+        <div class="msg ai">👋 Welcome! I’m the Hephos AI Assistant. How can I help you today?
+          <small>AI • just now</small>
+        </div>
+      </div>
+
+      <div class="card-foot">
+        <input id="input" placeholder="Type your message and press Enter…" autocomplete="off" />
+        <button id="send">Send</button>
+      </div>
+    </section>
+    <div class="footnote">© Hephos AI — Crafted with #023020 &amp; #D4AF37</div>
+  </main>
+
   <script>
-    const API_URL = "https://hephos-ai-chatbot.onrender.com/chat"; // <- Ovdje stavi tvoj Render API URL
+    const API_URL = 'https://hephos-ai-chatbot.onrender.com/chat'; // <-- zamijeni svojim Render URL-om
 
-    const messagesDiv = document.getElementById("messages");
-    const inputField = document.getElementById("userInput");
-    const sendBtn = document.getElementById("sendBtn");
+    const msgs = document.getElementById('msgs');
+    const inp  = document.getElementById('input');
+    const btn  = document.getElementById('send');
 
-    function addMessage(text, sender) {
-      const msg = document.createElement("div");
-      msg.classList.add("msg", sender);
-      msg.textContent = text;
-      messagesDiv.appendChild(msg);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    function timeNow(){
+      const d = new Date();
+      return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
     }
 
-    async function sendMessage() {
-      const userMsg = inputField.value.trim();
-      if (!userMsg) return;
-      addMessage(userMsg, "me");
-      inputField.value = "";
+    function addMsg(text, who='ai'){
+      const div = document.createElement('div');
+      div.className = `msg ${who}`;
+      div.innerHTML = `${escapeHtml(text)}<small>${who==='ai'?'AI':'You'} • ${timeNow()}</small>`;
+      msgs.appendChild(div);
+      msgs.scrollTop = msgs.scrollHeight;
+      return div;
+    }
 
-      addMessage("...", "ai");
+    function addTyping(){
+      const wrap = document.createElement('div');
+      wrap.className = 'typing';
+      wrap.innerHTML = '<i></i><i></i><i></i>';
+      msgs.appendChild(wrap);
+      msgs.scrollTop = msgs.scrollHeight;
+      return wrap;
+    }
 
-      try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({ message: userMsg })
+    function escapeHtml(s){
+      return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+    }
+
+    async function sendMessage(){
+      const text = inp.value.trim();
+      if(!text) return;
+      addMsg(text,'me');
+      inp.value = '';
+      const typing = addTyping();
+
+      try{
+        const r = await fetch(API_URL, {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ message: text })
         });
-
-        const data = await res.json();
-        messagesDiv.removeChild(messagesDiv.lastChild);
-        addMessage(data.response || "Error: No response from server", "ai");
-      } catch (err) {
-        messagesDiv.removeChild(messagesDiv.lastChild);
-        addMessage("⚠️ Connection error. Please try again.", "ai");
+        const data = await r.json();
+        typing.remove();
+        addMsg(data.response || data.error || 'No response','ai');
+      }catch(err){
+        typing.remove();
+        addMsg('⚠️ Connection error. Please try again.','ai');
       }
+      msgs.scrollTop = msgs.scrollHeight;
     }
 
-    sendBtn.addEventListener("click", sendMessage);
-    inputField.addEventListener("keydown", e => {
-      if (e.key === "Enter") sendMessage();
-    });
+    btn.addEventListener('click', sendMessage);
+    inp.addEventListener('keydown', e => { if(e.key==='Enter'){ e.preventDefault(); sendMessage(); }});
   </script>
 </body>
 </html>
