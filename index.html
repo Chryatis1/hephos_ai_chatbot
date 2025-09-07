@@ -1,82 +1,207 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hephos AI Assistant</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root{--bg:#0b1420;--bg2:#18253a;--panel:#121b2a;--text:#e9eef6;--muted:#9fb0c8;--accent:#e6c249}
-    *{box-sizing:border-box} body{margin:0;background:linear-gradient(var(--bg),var(--bg2));color:var(--text);font:16px/1.5 system-ui,Segoe UI,Roboto}
-    header{padding:18px 20px;border-bottom:1px solid #22324d;background:#0f1a2a;position:sticky;top:0}
-    header h1{margin:0;font-size:18px;letter-spacing:.3px}
-    .wrap{max-width:960px;margin:0 auto;padding:18px}
-    .chat{background:var(--panel);border:1px solid #22324d;border-radius:16px;height:70vh;display:flex;flex-direction:column;overflow:hidden}
-    .msgs{padding:16px;overflow:auto;gap:10px;display:flex;flex-direction:column}
-    .msg{max-width:72%;padding:12px 14px;border-radius:14px;white-space:pre-wrap}
-    .me{align-self:flex-end;background:#1f6add;color:#fff}
-    .ai{align-self:flex-start;background:#1b2435;border:1px solid #2b3c5c}
-    .muted{color:var(--muted);font-size:13px}
-    form{display:flex;gap:10px;padding:12px;border-top:1px solid #22324d;background:#0f1a2a}
-    input,button{font:16px/1.2 system-ui,Segoe UI,Roboto}
-    input{flex:1;padding:12px 14px;border-radius:10px;border:1px solid #2b3c5c;background:#0f1726;color:var(--text)}
-    button{padding:12px 16px;border-radius:10px;border:1px solid #705f1e;background:var(--accent);color:#0b0b0b;font-weight:600;cursor:pointer}
-    .brand{margin:10px auto 30px;color:var(--muted);font-size:13px;max-width:960px}
+    /* Paleta boja */
+    :root {
+      --dark-green: #023020; /* Glavna premium zelena */
+      --gold: #D4AF37;       /* Zlatna */
+      --white: #FFFFFF;
+      --gray: #BFC9C2;
+      --bg: #0B1512;         /* Tamna podloga */
+      --panel: #11211B;      /* Chat panel */
+      --accent-hover: #035c39; /* Hover zelena */
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: radial-gradient(800px circle at top right, rgba(212,175,55,0.1), transparent 60%),
+                  linear-gradient(180deg, var(--bg), var(--dark-green));
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* Header */
+    header {
+      width: 100%;
+      padding: 15px 20px;
+      background-color: var(--dark-green);
+      color: var(--white);
+      font-size: 22px;
+      font-weight: 600;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+      letter-spacing: 1px;
+    }
+
+    /* Chat container */
+    .chat-container {
+      width: 100%;
+      max-width: 650px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--panel);
+      border-radius: 12px;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.45);
+      margin-top: 20px;
+      overflow: hidden;
+    }
+
+    /* Chat messages */
+    .messages {
+      flex: 1;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    .msg {
+      padding: 12px 16px;
+      border-radius: 10px;
+      max-width: 75%;
+      font-size: 15px;
+      line-height: 1.5;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      animation: fadeIn 0.2s ease-in-out;
+      word-wrap: break-word;
+    }
+
+    .msg.ai {
+      background-color: #0f1e19;
+      border: 1px solid rgba(212,175,55,0.2);
+      align-self: flex-start;
+    }
+
+    .msg.me {
+      background-color: var(--dark-green);
+      border: 1px solid rgba(212,175,55,0.3);
+      color: var(--white);
+      align-self: flex-end;
+    }
+
+    /* Input box */
+    .input-box {
+      display: flex;
+      padding: 12px;
+      background-color: var(--panel);
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .input-box input {
+      flex: 1;
+      padding: 12px 14px;
+      background-color: #0e1e19;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .input-box input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 6px rgba(212,175,55,0.3);
+    }
+
+    .input-box button {
+      margin-left: 10px;
+      padding: 12px 22px;
+      background-color: var(--gold);
+      color: #111;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .input-box button:hover {
+      background-color: #e8c95c;
+    }
+
+    /* Fade in animation */
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(5px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
   </style>
 </head>
 <body>
-  <header><h1>Hephos AI Assistant</h1></header>
-  <div class="wrap">
-    <div class="chat">
-      <div class="msgs" id="msgs">
-        <div class="msg ai">Hello! I’m the Hephos AI Assistant. How can I help you today?</div>
-      </div>
-      <form id="form">
-        <input id="input" placeholder="Type your message..." autocomplete="off" />
-        <button type="submit">Send</button>
-      </form>
+  <header>Hephos AI Solutions</header>
+
+  <div class="chat-container">
+    <div class="messages" id="messages">
+      <div class="msg ai">👋 Hi! I'm your Hephos AI Assistant. How can I help you today?</div>
     </div>
-    <p class="brand">Powered by Hephos AI Solutions</p>
+
+    <div class="input-box">
+      <input id="userInput" placeholder="Type your message..." />
+      <button id="sendBtn">Send</button>
+    </div>
   </div>
 
   <script>
-    const API_URL = 'https://hephos-ai-chatbot.onrender.com/chat';
- // ako promijeniš port/host, promijeni ovdje
-    const form = document.getElementById('form');
-    const input = document.getElementById('input');
-    const msgs = document.getElementById('msgs');
+    const API_URL = "https://hephos-ai-chatbot.onrender.com/chat"; // <- Ovdje stavi tvoj Render API URL
 
-    function addMsg(text, who){
-      const div = document.createElement('div');
-      div.className = 'msg ' + (who === 'me' ? 'me' : 'ai');
-      div.textContent = text;
-      msgs.appendChild(div);
-      msgs.scrollTop = msgs.scrollHeight;
-      return div;
+    const messagesDiv = document.getElementById("messages");
+    const inputField = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    function addMessage(text, sender) {
+      const msg = document.createElement("div");
+      msg.classList.add("msg", sender);
+      msg.textContent = text;
+      messagesDiv.appendChild(msg);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
-    async function sendMessage(text){
-      addMsg(text,'me');
-      const pending = addMsg('…','ai');
-      try{
-        const r = await fetch(API_URL, {
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ message: text })
+    async function sendMessage() {
+      const userMsg = inputField.value.trim();
+      if (!userMsg) return;
+      addMessage(userMsg, "me");
+      inputField.value = "";
+
+      addMessage("...", "ai");
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ message: userMsg })
         });
-        const data = await r.json();
-        pending.textContent = data.response || data.error || 'No response';
-      }catch(e){
-        pending.textContent = 'Error contacting server.';
+
+        const data = await res.json();
+        messagesDiv.removeChild(messagesDiv.lastChild);
+        addMessage(data.response || "Error: No response from server", "ai");
+      } catch (err) {
+        messagesDiv.removeChild(messagesDiv.lastChild);
+        addMessage("⚠️ Connection error. Please try again.", "ai");
       }
-      msgs.scrollTop = msgs.scrollHeight;
     }
 
-    form.addEventListener('submit', (e)=>{
-      e.preventDefault();
-      const text = input.value.trim();
-      if(!text) return;
-      input.value='';
-      sendMessage(text);
+    sendBtn.addEventListener("click", sendMessage);
+    inputField.addEventListener("keydown", e => {
+      if (e.key === "Enter") sendMessage();
     });
   </script>
 </body>
