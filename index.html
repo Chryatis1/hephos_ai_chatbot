@@ -12,7 +12,7 @@
       --lgold:#EADFB7; --lgold-2:#D9C68C;
       --stroke:rgba(233,220,183,.30);
       --text-dark:#222; --text-muted:#666;
-      --ai-bg:#26282d; /* svjetlije ~5% od #1f1f23 */
+      --ai-bg:#444444; /* tražena siva za AI mjehurić */
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%}
@@ -57,20 +57,30 @@
 
     .msgs{flex:1; padding:18px; display:flex; flex-direction:column; gap:12px; overflow:auto}
 
-    .msg{position:relative; padding:12px 16px; max-width:78%; border-radius:14px; font-size:15px; line-height:1.5; word-wrap:break-word; box-shadow:0 2px 8px rgba(0,0,0,.08); animation:fade .2s ease}
-    .ai{align-self:flex-start; background:var(--ai-bg); color:#f2f2f2; border:1px solid rgba(234,223,183,.22)}
+    .msg{
+      position:relative; /* zbog pozicioniranja ikone iznad */
+      padding:12px 18px; max-width:78%; border-radius:14px; font-size:15px; line-height:1.5;
+      word-wrap:break-word; box-shadow:0 2px 8px rgba(0,0,0,.08); animation:fade .2s ease
+    }
+    .ai{
+      align-self:flex-start; background:var(--ai-bg); color:#f2f2f2;
+      border:1px solid rgba(234,223,183,.22);
+      padding-right: 28px; /* malo mjesta desno za ikonu na malim ekranima */
+    }
     .me{align-self:flex-end; background:var(--emerald-2); color:#fff; border:1px solid rgba(234,223,183,.32)}
 
-    /* MINIMAL copy ikona (20x20), bez okvira; postaje kvačica na copy */
+    /* mala outline copy ikona, lebdi IZNAD desnog kuta */
     .copy-btn{
-      position:absolute; top:6px; right:6px; width:22px; height:22px; border:0; background:transparent;
-      display:flex; align-items:center; justify-content:center; cursor:pointer; opacity:.85; transition:.15s;
+      position:absolute; top:-10px; right:-10px; width:24px; height:24px;
+      border:none; background:transparent; display:flex; align-items:center; justify-content:center;
+      cursor:pointer; opacity:.9; transition:opacity .15s, transform .15s;
+      transform:translate(0,0);
     }
-    .copy-btn:hover{opacity:1}
-    .copy-btn svg{width:18px; height:18px; fill:var(--lgold-2)}
-    .copy-btn.check svg{fill:#7bd389} /* boja kvačice */
+    .copy-btn:hover{opacity:1; transform:translate(-1px,-1px)}
+    .copy-btn svg{width:20px; height:20px; fill:none; stroke:var(--lgold-2); stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+    .copy-btn.check svg{stroke:#7bd389} /* kvačica boja */
 
-    /* tipkanje – SAMO rotirajući logo (bez boxa i teksta) */
+    /* tipkanje – SAMO rotirajući logo */
     .typing-spin{height:18px; width:auto; animation:spin 1.2s linear infinite; filter:drop-shadow(0 0 6px rgba(234,223,183,.45))}
     @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -143,24 +153,22 @@
     const inp  = document.getElementById('input');
     const btn  = document.getElementById('send');
 
+    // outline “copy” ikona (dvije preklopljene kocke) i kvačica
+    const ICON_COPY = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="10" height="10" rx="2"/><rect x="5" y="5" width="10" height="10" rx="2"/></svg>';
+    const ICON_CHECK = '<svg viewBox="0 0 24 24"><path d="M20 7 10 17l-6-6" fill="none" stroke-width="2"/></svg>';
+
     function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
 
     function addCopyButton(div){
       const btn = document.createElement('button');
       btn.className = 'copy-btn';
-      // ikona clipboard
-      btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 16H8V7h11v14Z"/></svg>';
+      btn.innerHTML = ICON_COPY;
       btn.title = "Copy";
       btn.addEventListener('click',()=>{
         const txt = div.textContent;
         navigator.clipboard.writeText(txt).then(()=>{
-          // promijeni u kvačicu
-          btn.classList.add('check');
-          btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M20.285 6.708a1 1 0 0 1 0 1.414l-9.19 9.19a1 1 0 0 1-1.414 0l-5-5a1 1 0 1 1 1.414-1.414l4.293 4.293 8.483-8.483a1 1 0 0 1 1.414 0Z"/></svg>';
-          setTimeout(()=>{
-            btn.classList.remove('check');
-            btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 16H8V7h11v14Z"/></svg>';
-          }, 1200);
+          btn.classList.add('check'); btn.innerHTML = ICON_CHECK;
+          setTimeout(()=>{ btn.classList.remove('check'); btn.innerHTML = ICON_COPY; }, 1200);
         });
       });
       div.appendChild(btn);
@@ -176,19 +184,17 @@
       return div;
     }
 
-    // tipkanje: SAMO rotirajući logo
+    // tipkanje: SAMO rotirajući logo (bez boxa/teksta)
     function addTypingSpin(){
       const img = document.createElement('img');
-      img.src = 'logo.png';
-      img.alt = 'typing';
-      img.className = 'typing-spin';
-      msgWrap = document.createElement('div');
-      msgWrap.style.display = 'flex';
-      msgWrap.style.alignItems = 'center';
-      msgWrap.appendChild(img);
-      msgs.appendChild(msgWrap);
+      img.src = 'logo.png'; img.alt = 'typing'; img.className = 'typing-spin';
+      const wrap = document.createElement('div');
+      wrap.style.display = 'flex';
+      wrap.style.alignItems = 'center';
+      wrap.appendChild(img);
+      msgs.appendChild(wrap);
       msgs.scrollTop = msgs.scrollHeight;
-      return msgWrap;
+      return wrap;
     }
 
     async function sendMessage(){
@@ -197,7 +203,7 @@
       addMsg(text,'me');
       inp.value = '';
 
-      const typing = addTypingSpin(); // samo logo
+      const typing = addTypingSpin();
       try{
         const r = await fetch(API_URL, {
           method:'POST',
